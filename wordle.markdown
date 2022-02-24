@@ -2,13 +2,16 @@
 title: Wordle Helper
 permalink: /wordle/
 layout: page
+
+includeonhomepage: True
+description: Enter data from your current wordle game to return a list of possible solutions
 ---
 Enter guesses below and colour letters based on results. Then click "Show Possible Solutions". The words populated in the solutions list are all the possible solutions.
 
 
 <div id="wordle">
 
-    <form id="form" action="/wordle_guess" method="post">
+    <form id="form">
         <h4 class="formTitle" >Guesses</h4>
         {% for i in (1..6) %}
         <guess class="formRow">
@@ -40,8 +43,8 @@ Enter guesses below and colour letters based on results. Then click "Show Possib
     </form>
 
     <words style="padding: 20px;">
-        <h4 class="formTitle" >Words</h4>
-        <textarea id="wordList" name="wordList" cols="8" rows="20">{{wordList}}</textarea>
+        <h4 class="formTitle" >Solutions</h4>
+        <textarea id="wordList" name="wordList" cols="5" readonly>{{wordList}}</textarea>
     </words>
 
 </div>
@@ -97,8 +100,7 @@ Enter guesses below and colour letters based on results. Then click "Show Possib
             item.attributes.datastate.value = 'tbd';
         })
 
-        $('.tile').removeAttr('style');
-        $('#form').hide().show(0);
+        document.getElementById('wordList').value = ""
         tiles[0].focus();
     }
 
@@ -194,6 +196,7 @@ Enter guesses below and colour letters based on results. Then click "Show Possib
     resize: none;
     text-transform: uppercase;
     white-space: pre;
+    height: 475px;
 }
 
 .formRow{
