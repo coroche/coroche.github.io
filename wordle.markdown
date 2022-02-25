@@ -17,7 +17,7 @@ Enter guesses below and colour letters based on results. Then click "Show Possib
         <guess class="formRow">
             {% for j in (1..5) %}
             <letter class="letter">
-                <input type="text" class="tile" id=letter{{i}}{{j}} name=letter{{i}}{{j}} maxlength=1 value='' tabindex=1 datastate="tbd" required />
+                <input type="text" class="tile" id=letter{{i}}{{j}} name=letter{{i}}{{j}} maxlength=1 value='' tabindex=1 datastate="tbd" autocapitalize="characters" />
                 <input type="color" class="colourPicker" id=colour{{i}}{{j}} name=colour{{i}}{{j}} value='#ffffff' list="presets" />
             </letter>
             {% endfor %}
