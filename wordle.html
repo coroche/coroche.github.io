@@ -13,12 +13,17 @@ Enter guesses below and colour letters based on results. Then click "Show Possib
 
     <form id="form">
         <h4 class="formTitle" >Guesses</h4>
+        <div>
+            <input type="radio"  id="letterMode" name="inputMode" onclick = "swapMode('letter')" value="Enter Guesses" checked=true>
+            <label for="letterMode">Enter Guesses</label>
+            <input type="radio" id="colourMode" name="inputMode" onclick = "swapMode('colour')" value="Enter Results">
+            <label for="colourMode">Enter Results</label>
+        </div>
         {% for i in (1..6) %}
-        <guess class="formRow">
+        <guess class="formRow" style="user-select:none">
             {% for j in (1..5) %}
             <letter class="letter">
-                <input type="text" class="tile" id=letter{{i}}{{j}} name=letter{{i}}{{j}} maxlength=1 value='' tabindex=1 datastate="tbd" autocapitalize="characters" />
-                <input type="color" class="colourPicker" id=colour{{i}}{{j}} name=colour{{i}}{{j}} value='#ffffff' list="presets" />
+                <input type="text" class="tile" id=letter{{i}}{{j}} name=letter{{i}}{{j}} maxlength=1 value=''  datastate="tbd" selectiontype="letter" autocapitalize="characters" />
             </letter>
             {% endfor %}
         </guess>
@@ -52,26 +57,18 @@ Enter guesses below and colour letters based on results. Then click "Show Possib
 <script src="/assets/js/wordleLogic.js"></script>
 <script>
     
+    const letterMode = document.getElementById('letterMode')
+    const colourMode = document.getElementById('colourMode')
+    
     const tiles = Array.from(document.querySelectorAll('.tile'))
-    const colourPickers = Array.from(document.querySelectorAll('.colourPicker'))
-
-    var dict = {
-        "#6aaa64": "correct",
-        "#c9b458": "present",
-        "#ffffff": "tbd",
-        "correct": "#6aaa64",
-        "present": "#c9b458",
-        "tbd"    : "#ffffff"
-    };
-
-    colourPickers.forEach(function (picker, i) {
-        picker.addEventListener("input", function(event) {
-            tiles[i].attributes.datastate.value = dict[event.target.value];
-            
 
 
-        }, false);
-    })
+    function swapMode(mode) {
+        tiles.forEach(function(tile) {
+            tile.readOnly = (mode == 'colour');
+            tile.attributes.selectiontype.value = mode
+        })
+    }
 
     tiles.forEach(function (tile, i) {
         tile.addEventListener("input", function(event) {
@@ -87,13 +84,22 @@ Enter guesses below and colour letters based on results. Then click "Show Possib
                 } 
             }
             
-        }, false);        
+        }, false);   
+        
+        tile.onclick = function() {
+            if (tile.attributes.selectiontype.value == 'colour') {
+                if (tile.attributes.datastate.value == 'tbd') {
+                    tile.attributes.datastate.value = 'present'
+                } else if (tile.attributes.datastate.value == 'present') {
+                    tile.attributes.datastate.value = 'correct'
+                } else if (tile.attributes.datastate.value == 'correct') {
+                    tile.attributes.datastate.value = 'tbd'
+                }
+            }
+        }
     })
 
     function clearAll() {
-        colourPickers.forEach(item => {
-            item.value = "#ffffff"
-        })
 
         tiles.forEach(item => {
             item.value = ""
@@ -102,15 +108,17 @@ Enter guesses below and colour letters based on results. Then click "Show Possib
 
         document.getElementById('wordList').value = ""
         tiles[0].focus();
+
+        swapMode('letter');
+        letterMode.checked = true
     }
 
     function onLoad() {
-        tiles[0].focus()
+        clearAll()
     }
 
-    function solve(tiles, colourPickers){
+    function solve(tiles){
         const tiles_ret = Array.from(document.querySelectorAll('.tile'))
-        const colourPickers_ret = Array.from(document.querySelectorAll('.colourPicker'))
         
         n = 0;
         while (tiles_ret[n].value.trim() != '') {
@@ -132,13 +140,13 @@ Enter guesses below and colour letters based on results. Then click "Show Possib
         
         for (let i = 0; i < N*5; i++) {
             g = Math.floor(i/5);
-            if (colourPickers_ret[i].value == dict['correct']) {
+            if (tiles_ret[i].attributes.datastate.value == 'correct') {
                 greens[g][i%5] = tiles_ret[i].value.toLowerCase()
             } 
-            else if (colourPickers_ret[i].value == dict['present']) {
+            else if (tiles_ret[i].attributes.datastate.value == 'present') {
                 oranges[g].push([tiles_ret[i].value.toLowerCase(), i%5])
             } 
-            else if (tiles_ret[i].value !== "" && colourPickers_ret[i].value == dict['tbd']) {
+            else if (tiles_ret[i].value !== "" && tiles_ret[i].attributes.datastate.value == 'tbd') {
                 elim[g].push(tiles_ret[i].value.toLowerCase())
             }
             guesses[g] = guesses[g] +  tiles_ret[i].value.toLowerCase()
@@ -171,16 +179,38 @@ Enter guesses below and colour letters based on results. Then click "Show Possib
     border-color: '#878a8c';
 }
 
+.tile[datastate='tbd'][selectiontype='colour']::selection{
+    color: #000000;
+    background: #ffffff;
+    cursor: pointer;
+}
+
+.tile[selectiontype='colour']{
+    cursor: pointer;
+}
+
 .tile[datastate='present']{
     border-style: none;
     color: #ffffff;
     background-color: #c9b458;
 }
 
+.tile[datastate='present'][selectiontype='colour']::selection{
+    color: #ffffff;
+    background: #c9b458;
+    cursor: pointer;
+}
+
 .tile[datastate='correct']{
     border-style: none;
     color: #ffffff;
     background-color: #6aaa64;
+}
+
+.tile[datastate='correct'][selectiontype='colour']::selection{
+    color: #ffffff;
+    background: #6aaa64;
+    cursor: pointer;
 }
 
 #form{
