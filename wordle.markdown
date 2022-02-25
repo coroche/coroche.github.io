@@ -133,15 +133,15 @@ Enter guesses below and colour letters based on results. Then click "Show Possib
         for (let i = 0; i < N*5; i++) {
             g = Math.floor(i/5);
             if (colourPickers_ret[i].value == dict['correct']) {
-                greens[g][i%5] = tiles_ret[i].value
+                greens[g][i%5] = tiles_ret[i].value.toLowerCase()
             } 
             else if (colourPickers_ret[i].value == dict['present']) {
-                oranges[g].push([tiles_ret[i].value, i%5])
+                oranges[g].push([tiles_ret[i].value.toLowerCase(), i%5])
             } 
             else if (tiles_ret[i].value !== "" && colourPickers_ret[i].value == dict['tbd']) {
-                elim[g].push(tiles_ret[i].value)
+                elim[g].push(tiles_ret[i].value.toLowerCase())
             }
-            guesses[g] = guesses[g] +  tiles_ret[i].value
+            guesses[g] = guesses[g] +  tiles_ret[i].value.toLowerCase()
             
         }
 
