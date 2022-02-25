@@ -6,7 +6,7 @@ layout: page
 includeonhomepage: True
 description: Enter data from your current wordle game to return a list of possible solutions
 ---
-Enter guesses below and colour letters based on results. Then click "Show Possible Solutions". The words populated in the solutions list are all the possible solutions.
+Enter guesses below and colour letters based on results. Then click "Show Possible Solutions".
 
 
 <div id="wordle">
