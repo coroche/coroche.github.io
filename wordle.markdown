@@ -42,7 +42,7 @@ Enter guesses below and colour letters based on results. Then click "Show Possib
 
     </form>
 
-    <words style="padding: 20px;">
+    <words id="solutions">
         <h4 class="formTitle" >Solutions</h4>
         <textarea id="wordList" name="wordList" cols="5" readonly>{{wordList}}</textarea>
     </words>
@@ -187,7 +187,6 @@ Enter guesses below and colour letters based on results. Then click "Show Possib
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    padding: 20px;
 }
 
 #wordList{
@@ -225,13 +224,17 @@ Enter guesses below and colour letters based on results. Then click "Show Possib
     flex-direction: row;
     width: auto;
     margin: auto;
-    margin-left: 50px;
     justify-content: center
 }
 
 .formTitle{
     width:min-content; 
     text-align:center;
+}
+
+@media only screen and (min-width: 768px) {
+    #form{padding: 20px;}
+    #solutions{padding: 20px;}
 }
 
 /* Chrome, Safari, Edge, Opera */
