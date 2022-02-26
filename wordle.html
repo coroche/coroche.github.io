@@ -75,6 +75,7 @@ Enter guesses below and colour letters based on results. Then click "Show Possib
             if (i < tiles.length - 1 && event.inputType != 'deleteContentBackward' && tiles[i].value != '') {
                 tiles[i+1].focus();
                 tiles[i+1].select();
+                tiles[i].value = event.data;
             }
         }, false);
 
