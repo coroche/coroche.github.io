@@ -73,14 +73,16 @@ Enter guesses below and colour letters based on results. Then click "Show Possib
     tiles.forEach(function (tile, i) {
         tile.addEventListener("input", function(event) {
             if (i < tiles.length - 1 && event.inputType != 'deleteContentBackward') {
-                tiles[i+1].select()
+                tiles[i+1].focus();
+                tiles[i+1].select();
             }
         }, false);
 
         tile.addEventListener("keyup", function(event) {
             if (event.key == 'Backspace') {
                 if (i > 0) {
-                    tiles[i-1].select()
+                    tiles[i-1].focus();
+                    tiles[i-1].select();
                 } 
             }
             
