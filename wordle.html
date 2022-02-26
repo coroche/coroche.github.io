@@ -72,7 +72,7 @@ Enter guesses below and colour letters based on results. Then click "Show Possib
 
     tiles.forEach(function (tile, i) {
         tile.addEventListener("input", function(event) {
-            if (i < tiles.length - 1 && event.inputType != 'deleteContentBackward') {
+            if (i < tiles.length - 1 && event.inputType != 'deleteContentBackward' && tiles[i].value != '') {
                 tiles[i+1].focus();
                 tiles[i+1].select();
             }
