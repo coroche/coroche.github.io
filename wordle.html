@@ -31,7 +31,7 @@ Enter guesses below and colour letters based on results. Then click "Show Possib
         
         <submit class="formRow">
             <div class="button">
-                <input type="button" value="Show Possible Solutions" id="submit"  onclick="solve()"/>
+                <input type="button" value="Show Possible Solutions" id="submit"  onclick="solve(tiles)"/>
             </div>
             <div class="button">
                 <input type="button" value="Clear" id="clear" onclick="clearAll()"/>
@@ -122,10 +122,10 @@ Enter guesses below and colour letters based on results. Then click "Show Possib
     }
 
     function solve(tiles){
-        const tiles_ret = Array.from(document.querySelectorAll('.tile'))
+        //const tiles = Array.from(document.querySelectorAll('.tile'))
         
         n = 0;
-        while (tiles_ret[n].value.trim() != '') {
+        while (n < tiles.length && tiles[n].value.trim() != '') {
             n++
         }
         N = Math.floor(n/5); //Number of complete words
@@ -144,21 +144,21 @@ Enter guesses below and colour letters based on results. Then click "Show Possib
         
         for (let i = 0; i < N*5; i++) {
             g = Math.floor(i/5);
-            if (tiles_ret[i].attributes.datastate.value == 'correct') {
-                greens[g][i%5] = tiles_ret[i].value.toLowerCase()
+            if (tiles[i].attributes.datastate.value == 'correct') {
+                greens[g][i%5] = tiles[i].value.toLowerCase()
             } 
-            else if (tiles_ret[i].attributes.datastate.value == 'present') {
-                oranges[g].push([tiles_ret[i].value.toLowerCase(), i%5])
+            else if (tiles[i].attributes.datastate.value == 'present') {
+                oranges[g].push([tiles[i].value.toLowerCase(), i%5])
             } 
-            else if (tiles_ret[i].value !== "" && tiles_ret[i].attributes.datastate.value == 'tbd') {
-                elim[g].push(tiles_ret[i].value.toLowerCase())
+            else if (tiles[i].value !== "" && tiles[i].attributes.datastate.value == 'tbd') {
+                elim[g].push(tiles[i].value.toLowerCase())
             }
-            guesses[g] = guesses[g] +  tiles_ret[i].value.toLowerCase()
+            guesses[g] = guesses[g] +  tiles[i].value.toLowerCase()
             
         }
 
-        applyGuesses(greens, oranges, elim, guesses, N)
-        document.getElementById('wordList').value = wordList.join('\r\n')
+        wordList = applyGuesses(greens, oranges, elim, guesses, N);
+        document.getElementById('wordList').value = wordList.join('\r\n');
         
     }
 

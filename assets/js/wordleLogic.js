@@ -76,5 +76,9 @@ function applyGuesses(greens, oranges, elim, guesses, N) {
     for (let n = 0; n < N; n++) {
         applyGuess(greens[n], oranges[n], elim[n], guesses[n]);
         
-    }    
+    }
+    if (wordList.length == 0){
+        wordList[0] = ':(';
+    }
+    return wordList    
 }
