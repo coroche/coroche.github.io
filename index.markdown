@@ -23,6 +23,6 @@ layout: home
 <style>
 .page-link { color: #111 !important; line-height: 1.5;}
 dt {font-size: 26px; font-weight: 300;}
-dd {font-size: 13px; font-weight: 300; margin-left:10px}
+dd {font-size: 13px; font-weight: 300; margin-left:10px; margin-bottom: 15px}
 </style>
 

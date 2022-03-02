@@ -1,12 +1,12 @@
 ---
-title: Countdown Numbers Round
+title: Countdown
 permalink: /countdown/
 layout: page
 
 includeonhomepage: True
 description: Find the optimun solution to any Countdown numbers round
 ---
-Enter the target number and six number tiles and click "Solve".
+Enter the target number and six number tiles of your game. Click "Solve" to generate the optimum solution.
 
 
 <form id="form">
@@ -25,11 +25,12 @@ Enter the target number and six number tiles and click "Solve".
     <submit class="formRow">
         <input type="button" value="Solve" id="submit" onclick="solve()"/>
     </submit>
-
-    <output class="formRow" style="padding: 50px;">
-        <textarea id="solution" name="solution" cols="20" rows="5">{{solution}}</textarea>
-    </output>
 </form>
+    
+<output id="countdownOutput" style="padding: 50px;">
+    <textarea id="solution" name="solution" cols="20" rows="5"></textarea>
+</output>
+
 
 <script src="/assets/js/countdownLogic.js"></script>
 <script>
@@ -50,69 +51,19 @@ Enter the target number and six number tiles and click "Solve".
 </script>
 
 <style>
-body {
-    min-height: 100vh;
-    position: relative;
-    margin: 0;
-    padding-bottom: 100px; 
-    box-sizing: border-box;
-}
-
-.wrapper{
-    max-width: 960px;
-}
-
-footer {
-    position: absolute;
-    bottom: 0;
-    height: 100px;
-    padding-top:50px;
-}
-
-.responsive{
-    max-width: 100%;
-    height: auto;
-    margin-left: auto;
-    margin-right: auto;
-}
 
 .num{
     width: 50px;
     height: 50px;
     text-align: center;
-}
-
-.tile{
-    width: 50px;
-    height: 50px;
-    text-align: center;
-    text-transform: uppercase;
-    font-size: 2rem;
-    line-height: 2rem;
-    font-weight: 600;
-}
-
-.tile[datastate='tbd']{
-    border-style: solid;
-    border-color: '#878a8c';
-}
-
-.tile[datastate='present']{
-    border-style: none;
-    color: #ffffff;
-    background-color: #c9b458;
-}
-
-.tile[datastate='correct']{
-    border-style: none;
-    color: #ffffff;
-    background-color: #6aaa64;
+    font-size: large;
 }
 
 #target{
     width: 70px;
     height: 50px;
     text-align: center;
+    font-size: larger;
 }
 
 #form{
@@ -128,14 +79,13 @@ footer {
     margin: auto;
     padding: 10px;
     resize: none;
+    font-size: larger;
 }
 
-#wordList{
-    margin: auto;
-    padding: 10px;
-    resize: none;
-    text-transform: uppercase;
-    white-space: pre;
+#countdownOutput{
+    padding: 50px;
+    display: flex;
+    justify-content: center;
 }
 
 .formRow{
@@ -148,32 +98,8 @@ footer {
     padding: 2px;
 }
 
-.letter{
-    display: flex;
-    flex-direction: column;
-    padding: 2px;
-}
-
-.colourPicker{
-    width: 50px;
-    height: 20px;
-}
-
 .button{
     padding: 5px;
-}
-
-#wordle{
-    display: flex;
-    flex-direction: row;
-    width: auto;
-    margin: auto;
-    margin-left: 50px;
-}
-
-.formTitle{
-    width:min-content; 
-    text-align:center;
 }
 
 /* Chrome, Safari, Edge, Opera */

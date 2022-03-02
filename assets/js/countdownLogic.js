@@ -108,11 +108,15 @@ function solveBoard(tiles, target) {
     
     solutions.splice(0,solutions.length);
     solve_list(tiles,target,[])
-    console.log(solutions)
-    solutions.sort(function(a,b){
-        return a.length - b.length;
-    });
-    return solutions[0]
+    
+    if (solutions.length == 0) {
+        return ['No solution exists :(']
+    } else {
+        solutions.sort(function(a,b){
+            return a.length - b.length;
+        });
+        return solutions[0]
+    }
 }
 
 function getPairs(array) {
