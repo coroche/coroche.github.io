@@ -23,7 +23,9 @@ Enter the target number and six number tiles of your game. Click "Solve" to gene
     </numbers>
 
     <submit class="formRow">
-        <input type="button" value="Solve" id="submit" onclick="solve()"/>
+        <button type="button" class="button" id="submit" onclick="solve()">
+            <span class="button__text">Solve</span>
+        </button>
     </submit>
 </form>
     
@@ -37,16 +39,43 @@ Enter the target number and six number tiles of your game. Click "Solve" to gene
     const target = document.getElementById("target")
     const tiles = Array.from(document.querySelectorAll('.num'))
     const sol_window = document.getElementById('solution')
+    const solve_btn = document.getElementById('submit')
 
     function solve() {
+        solve_btn.classList.add("button--loading"); //start spinner
+        sol_window.value = '' //clear solution window
 
+        valid = true
+
+        //get values from form
+        if (target.value == '') {
+            valid = false //invalid input
+        }
         target_val = target.valueAsNumber
+        
         tiles_val = []
         tiles.forEach(function (tile) {
+            if (tile.value == '') {
+                valid = false //invalid input               
+            }
             tiles_val.push(tile.valueAsNumber)              
         })
-        solution = solveBoard(tiles_val,target_val)
-        sol_window.value = solution.join('\r\n');
+
+        //if inputs are valid, run logic
+        if (valid) {
+            setTimeout(function(){
+            solution = solveBoard(tiles_val,target_val);
+            sol_window.value = solution.join('\r\n');
+        
+            solve_btn.classList.remove("button--loading"); //stop spinner
+            },100);
+        } else {
+            sol_window.value = 'Invalid input'
+            
+            solve_btn.classList.remove("button--loading"); //stop spinner
+        }
+        
+        
     }
 </script>
 
@@ -98,8 +127,48 @@ Enter the target number and six number tiles of your game. Click "Solve" to gene
     padding: 2px;
 }
 
-.button{
-    padding: 5px;
+.button {
+  position: relative;
+  padding: 8px 16px;
+}
+
+.button:active {
+  background: #b9b9b9;
+}
+
+.button__text {
+  transition: all 0.2s;
+}
+
+.button--loading .button__text {
+  visibility: hidden;
+  opacity: 0;
+}
+
+.button--loading::after {
+  content: "";
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+  border: 4px solid transparent;
+  border-top-color: #636363;
+  border-radius: 50%;
+  animation: button-loading-spinner 1s ease infinite;
+}
+
+@keyframes button-loading-spinner {
+  from {
+    transform: rotate(0turn);
+  }
+
+  to {
+    transform: rotate(1turn);
+  }
 }
 
 /* Chrome, Safari, Edge, Opera */

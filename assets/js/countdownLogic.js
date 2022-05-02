@@ -3,7 +3,7 @@ const solutions=[] //List to store solutions as they're found
 function solve_list(num_list,target,ops) {
     
     if (num_list.includes(target)){ //if the target is in the number list add it to solutions
-        solutions.push(target.toString()+' = '+target.toString())
+        solutions.push([target.toString()+' = '+target.toString()])
     }
     
     //Loop through all pairs in the numbers list
