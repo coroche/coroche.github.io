@@ -15,7 +15,7 @@ layout: home
 <dt>
 <a class="page-link" href="{{ my_page.url | relative_url }}">{{ my_page.title | escape }}</a>
 </dt>
-<dd>{{my_page.description}}</dd>
+<dd>{{ my_page.description }}</dd>
 {%- endif -%}
 {%- endfor -%}
 </dl>
