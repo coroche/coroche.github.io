@@ -1,0 +1,292 @@
+---
+title: Nerdle
+permalink: /nerdle/
+layout: page
+
+includeonhomepage: True
+description: Enter data from your current nerdle game to return a list of possible solutions
+---
+Enter guesses below and colour letters based on results. Then click "Show Possible Solutions".
+
+
+<div id="nerdle">
+
+    <form id="form">
+        <h4 class="formTitle" >Guesses</h4>
+        <div>
+            <input type="radio"  id="letterMode" name="inputMode" onclick = "swapMode('letter')" value="Enter Guesses" checked=true>
+            <label for="letterMode">Enter Guesses</label>
+            <input type="radio" id="colourMode" name="inputMode" onclick = "swapMode('colour')" value="Enter Results">
+            <label for="colourMode">Enter Results</label>
+        </div>
+        {% for i in (1..6) %}
+        <guess class="formRow" style="user-select:none">
+            {% for j in (1..8) %}
+            <letter class="letter">
+                <input type="text" class="tile" id=letter{{i}}{{j}} name=letter{{i}}{{j}} maxlength=1 value=''  datastate="tbd" selectiontype="letter" autocapitalize="characters" />
+            </letter>
+            {% endfor %}
+        </guess>
+        {% endfor %}
+        
+        <submit class="formRow">
+            <div class="button">
+                <input type="button" value="Show Possible Solutions" id="submit"  onclick="solve(tiles)"/>
+            </div>
+            <div class="button">
+                <input type="button" value="Clear" id="clear" onclick="clearAll()"/>
+            </div>
+        </submit>
+
+        
+        <datalist id="presets">
+        <option value="#398874">Right letter, right position</option>
+        <option value="#820458">Right letter, wrong position</option>
+        <option value="#ffffff">White</option>
+        </datalist>
+
+    </form>
+
+    <equations id="solutions">
+        <h4 class="formTitle" >Solutions</h4>
+        <textarea id="equationList" name="equationList" cols="8" readonly></textarea>
+    </equations>
+
+</div>
+
+<script src="/assets/js/nerdleLogic.js"></script>
+<script>
+    
+    const letterMode = document.getElementById('letterMode')
+    const colourMode = document.getElementById('colourMode')
+    
+    const tiles = Array.from(document.querySelectorAll('.tile'))
+
+
+    function swapMode(mode) {
+        tiles.forEach(function(tile) {
+            tile.readOnly = (mode == 'colour');
+            tile.attributes.selectiontype.value = mode
+        })
+    }
+
+    tiles.forEach(function (tile, i) {
+        tile.addEventListener("input", function(event) {
+            if (i < tiles.length - 1 && event.inputType != 'deleteContentBackward' && tiles[i].value != '') {
+                tiles[i+1].focus();
+                tiles[i+1].select();
+                tiles[i].value = event.data;
+            }
+        }, false);
+
+        tile.addEventListener("keyup", function(event) {
+            if (event.key == 'Backspace') {
+                if (i > 0) {
+                    tiles[i-1].focus();
+                    tiles[i-1].select();
+                } 
+            }
+            
+        }, false);   
+        
+        tile.onclick = function() {
+            if (tile.attributes.selectiontype.value == 'colour') {
+                if (tile.attributes.datastate.value == 'tbd') {
+                    tile.attributes.datastate.value = 'present'
+                } else if (tile.attributes.datastate.value == 'present') {
+                    tile.attributes.datastate.value = 'correct'
+                } else if (tile.attributes.datastate.value == 'correct') {
+                    tile.attributes.datastate.value = 'tbd'
+                }
+                tile.blur()
+            }
+        }
+    })
+
+    function clearAll() {
+
+        tiles.forEach(item => {
+            item.value = ""
+            item.attributes.datastate.value = 'tbd';
+        })
+
+        document.getElementById('equationList').value = ""
+        tiles[0].focus();
+
+        swapMode('letter');
+        letterMode.checked = true
+    }
+
+    function onLoad() {
+        clearAll()
+    }
+
+    function solve(tiles){
+        
+        n = 0;
+        while (n < tiles.length && tiles[n].value.trim() != '') {
+            n++
+        }
+        N = Math.floor(n/8); //Number of complete equations
+        
+        const greens = [];
+        const oranges = [];
+        const elim = [];
+        const guesses = [];
+    
+        for (let i = 0; i < N; i++) {
+            greens.push(['_', '_', '_', '_', '_', '_', '_', '_']);
+            oranges.push([])
+            elim.push([])
+            guesses.push('')
+        }
+        
+        for (let i = 0; i < N*8; i++) {
+            g = Math.floor(i/8);
+            if (tiles[i].attributes.datastate.value == 'correct') {
+                greens[g][i%8] = tiles[i].value.toLowerCase()
+            } 
+            else if (tiles[i].attributes.datastate.value == 'present') {
+                oranges[g].push([tiles[i].value.toLowerCase(), i%8])
+            } 
+            else if (tiles[i].value !== "" && tiles[i].attributes.datastate.value == 'tbd') {
+                elim[g].push(tiles[i].value.toLowerCase())
+            }
+            guesses[g] = guesses[g] +  tiles[i].value.toLowerCase()
+            
+        }
+
+        equationList = applyGuesses(greens, oranges, elim, guesses, N);
+        document.getElementById('equationList').value = equationList.join('\r\n');
+        
+    }
+
+    window.onload = onLoad;
+
+</script>
+
+<style>
+.tile{
+    width: 50px;
+    height: 50px;
+    text-align: center;
+    text-transform: uppercase;
+    font-size: 2rem;
+    line-height: 2rem;
+    font-weight: 600;
+    box-sizing: border-box;
+}
+
+.tile[datastate='tbd']{
+    border-style: solid;
+    border-color: '#878a8c';
+}
+
+.tile[datastate='tbd'][selectiontype='colour']::selection{
+    color: #000000;
+    background: #ffffff;
+    cursor: pointer;
+}
+
+.tile[selectiontype='colour']{
+    cursor: pointer;
+    -webkit-touch-callout:none;
+    -webkit-user-select:none;
+    -khtml-user-select:none;
+    -moz-user-select:none;
+    -ms-user-select:none;
+    user-select:none;
+    -webkit-tap-highlight-color:rgba(0,0,0,0);
+
+}
+
+.tile[datastate='present']{
+    border-style: none;
+    color: #ffffff;
+    background-color: #820458;
+}
+
+.tile[datastate='present'][selectiontype='colour']::selection{
+    color: #ffffff;
+    background: #820458;
+    cursor: pointer;
+}
+
+.tile[datastate='correct']{
+    border-style: none;
+    color: #ffffff;
+    background-color: #398874;
+}
+
+.tile[datastate='correct'][selectiontype='colour']::selection{
+    color: #ffffff;
+    background: #398874;
+    cursor: pointer;
+}
+
+#form{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+#equationList{
+    margin: auto;
+    padding: 10px;
+    resize: none;
+    text-transform: uppercase;
+    white-space: pre;
+    height: 475px;
+}
+
+.formRow{
+    display: flex;
+    justify-content: center;
+    padding: 5px;
+}
+
+.letter{
+    display: flex;
+    flex-direction: column;
+    padding: 2px;
+}
+
+.colourPicker{
+    width: 50px;
+    height: 20px;
+}
+
+.button{
+    padding: 5px;
+}
+
+#nerdle{
+    display: flex;
+    flex-direction: row;
+    width: auto;
+    margin: auto;
+    justify-content: center
+}
+
+.formTitle{
+    width:min-content; 
+    text-align:center;
+}
+
+@media only screen and (min-width: 768px) {
+    #form{padding: 20px;}
+    #solutions{padding: 20px;}
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+</style>
