@@ -2,11 +2,12 @@
 layout: default
 ---
 <article class="post">
-
-  <header class="post-header">
-    <h1 class="post-title">{{ page.title | escape }}</h1>
+  
+  {%- unless page.hidetitle -%}
+  <header class="post-header">  
+    <h1 class="post-title">{{ page.title | escape }}</h1>  
   </header>
-
+  {%- endunless -%}
   <div class="post-content">
     {{ content }}
   </div>
