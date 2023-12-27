@@ -22,8 +22,15 @@ description: Keeping track of my progress in climbing all Vandeleur-Lynams
         </div>        
     </div>
 
-    <div style="display: flex;justify-content: center;">
+    <div class="iframecontainer">
         <iframe id="map" src="https://europe-west2-vlupdate.cloudfunctions.net/getmap"></iframe>
+    </div>
+    <div style="padding-top: 50px;">
+        <p>If you are feeling masochistic, you can sign up to receive emails when I climb hills. This is not recommended.</p>
+    
+        <div class="iframecontainer">
+            <iframe id="form" src="https://europe-west2-vlupdate.cloudfunctions.net/subscribe"></iframe>
+        </div>
     </div>
 </div>
 
@@ -47,6 +54,17 @@ description: Keeping track of my progress in climbing all Vandeleur-Lynams
     justify-content: center;
     margin-top: 30px;
     margin-bottom: 30px;
+}
+
+.iframecontainer{
+    display: flex;
+    justify-content: center;
+}
+
+#form{
+    border: none;
+    width: 100%;
+    aspect-ratio: 1;
 }
 
 @media only screen and (min-width: 768px) {
